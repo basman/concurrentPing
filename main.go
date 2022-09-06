@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -19,11 +20,29 @@ func pingAll(jobs chan ping.Host) (int, int) {
 	// TODO for every job provided by the input channel call Host.Ping() once
 	// TODO return the number of hosts that are reachable according to Host.Reachable and the number of all jobs
 	var hostCount, reachableCount int
+	out := make(chan bool)
+	wg := sync.WaitGroup{}
 	for h := range jobs {
 		hostCount++
-		h.Ping()
 
-		if h.Reachable != nil && *h.Reachable {
+		wg.Add(1)
+		go func(h1 ping.Host) {
+			h1.Ping()
+
+			if h1.Reachable != nil && *h1.Reachable {
+				out <- true
+			}
+			wg.Done()
+		}(h)
+	}
+
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
+
+	for res := range out {
+		if res {
 			reachableCount++
 		}
 	}
