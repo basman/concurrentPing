@@ -29,7 +29,7 @@ func Test_pingAll(t *testing.T) {
 	}(staticTestHostList, ch)
 
 	// act
-	reachCount, hostCount := pingAll(ch)
+	hostCount, reachCount := pingAll(ch)
 
 	// assert
 	if hostCount != 8 {
