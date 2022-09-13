@@ -18,7 +18,7 @@ import (
 func pingAll(jobs chan ping.Host) (int, int) {
 	// TODO for every job provided by the input channel call Host.Ping() once
 	// TODO return the number of hosts that are reachable according to Host.Reachable and the number of all jobs
-	var reachableCount, hostCount int
+	var hostCount, reachableCount int
 	for h := range jobs {
 		hostCount++
 		h.Ping()
@@ -27,7 +27,7 @@ func pingAll(jobs chan ping.Host) (int, int) {
 			reachableCount++
 		}
 	}
-	return reachableCount, hostCount
+	return hostCount, reachableCount
 }
 
 const hostsFilename = "hosts.csv.bz2"
