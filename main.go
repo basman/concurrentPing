@@ -36,7 +36,7 @@ func pingAll(jobs chan ping.Host) (int, int) {
 	}
 
 	wg.Wait()
-	return int(reachCount), hostCount
+	return hostCount, int(reachCount)
 }
 
 const hostsFilename = "hosts.csv.bz2"
